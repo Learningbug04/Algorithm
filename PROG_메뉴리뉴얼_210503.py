@@ -1,25 +1,18 @@
-from collections import defaultdict
 from itertools import combinations
+from collections import Counter
 
-def solution(orders, course):
-    counter = defaultdict(int)
-    order_set_list = []
-    unique_menu = set()
+def solution(orders, courses):
     answer = []
-    for order in orders:
-        order_set_list.append(set(order))
-        unique_menu.update(set(order))
-        for menu in order:
-            counter[menu] += 1
-    for i in range(2,11):
-        for check_menu in list(combinations(unique_menu,i)):
-            cnt = 0
-            for menu in order_set_list:
-                check_menu = set(check_menu)
-                print(check_menu.intersection(menu))
-                # if len(check_menu.intersection(menu)) >=2:
-                #     cnt +=1
-            if cnt >=2 :
-                answer.append(check_menu)
-    print(answer)
-    # return answer
+    unique_order = set()
+    temp = []
+    for course in courses:
+        for order in orders:
+            combi = combinations(sorted(order), course)
+            temp.extend(list(combi))
+        counter = Counter(temp)
+        most_counter = counter.most_common(1)
+        if len(most_counter) > 0 and most_counter[0][1] > 1:
+            max_value = most_counter[0][1]
+            answer.extend([''.join(x[0]) for x in list(counter.items()) if x[1] == max_value])
+        temp = []
+    return sorted(answer)
