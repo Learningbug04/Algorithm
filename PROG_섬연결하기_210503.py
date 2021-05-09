@@ -1,15 +1,18 @@
-def solution(n, costs):
-    costs.sort(key = lambda x: x[2])
-    routes = set([costs[0][0], costs[0][1]])
-    answer = costs[0][2]
-    
-    while n != len(routes):
-        for i, v in enumerate(costs[1:]):
-            if v[0] in routes and v[1] in routes:
-                continue
-            if v[0] in routes or v[1] in routes:
-                routes.update([v[0],v[1]])
-                answer += v[2]
-                costs[i+1] = [-1,-1,-1]
-                break
-    return answer
+from itertools import combinations
+from collections import Counter
+
+def solution(orders, courses):
+    answer = []
+    unique_order = set()
+    temp = []
+    for course in courses:
+        for order in orders:
+            combi = combinations(sorted(order), course)
+            temp.extend(list(combi))
+        counter = Counter(temp)
+        most_counter = counter.most_common(1)
+        if len(most_counter) > 0 and most_counter[0][1] > 1:
+            max_value = most_counter[0][1]
+            answer.extend([''.join(x[0]) for x in list(counter.items()) if x[1] == max_value])
+        temp = []
+    return sorted(answer)
