@@ -1,31 +1,31 @@
+from collections import defaultdict
+
 parentheses_dict = {'[':']' , '{':'}', '(':')'}
 
 def solution(s):
-    if len(s) % 2:
-        return 0
     answer = 0
-    str_list = [x for x in s]
     for i in range(len(s)):
-        for j in range(int(len(s)/2)):
-            str_list = verify_string(str_list)
-            if str_list == False:
-                break
-            if str_list == '':
-                print(s)
-                answer += 1
-                break
+        if verify_parentheses(s) is True:
+            answer += 1
         s = s[1:] + s[0]
-        str_list = [x for x in s]
     return answer
 
-def verify_string(str_list):
-    next_parentheses = parentheses_dict.get(str_list[0],False)
-    if str_list[1] == next_parentheses:
-        if len(str_list) == 2:
-            return ''
-        return str_list[2:]
-    if str_list[-1] == next_parentheses:
-        if len(str_list) == 2:
-            return ''
-        return str_list[1:-1]
+def verify_parentheses(string):
+    stack = []
+    if string[0] == '}' or string[0] == ']' or string[0] == ')':
+        return False
+    for i in range(len(string)):
+        if len(stack) == 0:
+            stack.append(string[i])
+            continue
+        poped_stack = stack.pop()
+        if parentheses_dict.get(poped_stack,'') == string[i]:
+            continue
+        stack.append(poped_stack)
+        stack.append(string[i])
+    if len(stack) == 0:
+        return True
     return False
+        
+        
+    
